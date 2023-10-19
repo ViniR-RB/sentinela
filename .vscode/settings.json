@@ -1,0 +1,11 @@
+{
+    "workbench.iconTheme": "material-icon-theme",
+    "material-icon-theme.folders.associations": {
+        "domain": "rules",
+        "adapters": "pipe"
+    },
+    "material-icon-theme.files.associations": {
+        "*.repository.ts": "Nest-controller",
+        "*.exception.ts": "Nest",
+    }
+}
