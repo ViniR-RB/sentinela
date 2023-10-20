@@ -9,6 +9,6 @@ export class EncryptionService {
     return await brcypt.hash(anyString, this.configurationService.getSalt());
   }
   async isMatch(hashedString: string, normalString: string) {
-    return await brcypt.compare(hashedString, normalString);
+    return await brcypt.compare(normalString, hashedString);
   }
 }

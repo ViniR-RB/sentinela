@@ -1,5 +1,8 @@
 import { Module } from "@nestjs/common";
+import { JwtModule } from "@nestjs/jwt";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { jwtConstants } from "./app/core/constants/jwt_constants";
+import AuthModule from "./app/modules/auth/auth.module";
 import { ConfigurationModule } from "./app/modules/configuration/configuration.module";
 import { ConfigurationService } from "./app/modules/configuration/configuration.service";
 import UserModule from "./app/modules/user/user.module";
@@ -21,7 +24,13 @@ import UserModule from "./app/modules/user/user.module";
         synchronize: true,
       }),
     }),
+    JwtModule.register({
+      global: true,
+      secret: jwtConstants.secret,
+      signOptions: { expiresIn: "60s" },
+    }),
     UserModule,
+    AuthModule,
   ],
 })
 export class AppModule {}

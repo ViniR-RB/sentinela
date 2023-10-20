@@ -31,5 +31,11 @@ import {
     },
   ],
   controllers: [UserController],
+  exports: [
+    {
+      provide: USER_ADAPTER_GATEWAY,
+      useClass: UserRepository,
+    },
+  ],
 })
 export default class UserModule {}

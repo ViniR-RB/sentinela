@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { EncryptionService } from "src/app/core/services/encryption.service";
-import { Repository } from "typeorm";
+import { EntityNotFoundError, Repository } from "typeorm";
 import IUserAdapterGateway from "../../adapters/i_user_gateway";
 import UserAlreadyExists from "../../domain/exception/user_already_exists.exception";
 import UserNotAlreadyExists from "../../domain/exception/user_not_already_exists.exception";
@@ -16,6 +16,28 @@ export default class UserRepository implements IUserAdapterGateway {
     private readonly userRepository: Repository<UserModel>,
     private readonly encryptionService: EncryptionService,
   ) {}
+  public async findOneByEmail(email: string): Promise<UserEntity> {
+    try {
+      return await this.userRepository.findOneByOrFail({
+        email: email,
+      });
+    } catch (error) {
+      if (error instanceof EntityNotFoundError) {
+        throw new UserRepositoryException("Usuário não encontrado");
+      }
+    }
+  }
+  public async findOneById(id: string) {
+    try {
+      return await this.userRepository.findOneByOrFail({
+        id: id,
+      });
+    } catch (error) {
+      if (error instanceof EntityNotFoundError) {
+        throw new UserRepositoryException("Usuário não encontrado");
+      }
+    }
+  }
   public async create(userCreate: UserEntity): Promise<void> {
     const { email } = userCreate;
     try {
@@ -51,7 +73,10 @@ export default class UserRepository implements IUserAdapterGateway {
       }
       this.userRepository.merge(userFinder, userAltered);
       await this.userRepository.update(id, userFinder);
-      return userFinder;
+      return {
+        ...userFinder,
+        password: null,
+      };
     } catch (error) {
       throw new UserRepositoryException(error.message, error.stack);
     }
