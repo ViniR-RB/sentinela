@@ -6,6 +6,7 @@
     },
     "material-icon-theme.files.associations": {
         "*.repository.ts": "Nest-controller",
+        "*.entity.ts": "Nest-controller",
         "*.exception.ts": "Nest",
     }
 }

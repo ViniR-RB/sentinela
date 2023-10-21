@@ -24,9 +24,10 @@ export default class AuthController {
     private readonly refreshUseCase: IRefreshTokensUseCase,
   ) {}
   @Post("/login")
-  async login(@Body() login: LoginDto) {
+  async login(@Body() bodyRequest: LoginDto) {
     try {
-      return await this.loginUsecase.login(login.email, login.password);
+      const { email, password, perfilType } = bodyRequest;
+      return await this.loginUsecase.login(email, password, perfilType);
     } catch (error) {
       if (error instanceof AuthRepositoryException) {
         throw new HttpException(error.message, HttpStatus.NOT_FOUND, {
@@ -37,10 +38,11 @@ export default class AuthController {
   }
   @UseGuards(AuthRefreshGuard)
   @Get("/refresh")
-  async refreshTokens(@Request() req) {
+  async refreshTokens(@Request() req, @Body() body) {
     try {
       const id = req.user.sub;
-      return await this.refreshUseCase.refresh(id);
+      const { perfilType } = body;
+      return await this.refreshUseCase.refresh(id, perfilType);
     } catch (error) {
       if (error instanceof AuthRepositoryException) {
         throw new HttpException(error.message, HttpStatus.NOT_FOUND, {

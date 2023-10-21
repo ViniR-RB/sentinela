@@ -2,9 +2,11 @@ import { Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { jwtConstants } from "./app/core/constants/jwt_constants";
+import AdministratorModule from "./app/modules/administrator/administrator.module";
 import AuthModule from "./app/modules/auth/auth.module";
 import { ConfigurationModule } from "./app/modules/configuration/configuration.module";
 import { ConfigurationService } from "./app/modules/configuration/configuration.service";
+import EnterpriseModule from "./app/modules/enterprise/enterprise.module";
 import UserModule from "./app/modules/user/user.module";
 
 @Module({
@@ -29,8 +31,10 @@ import UserModule from "./app/modules/user/user.module";
       secret: jwtConstants.secret,
       signOptions: { expiresIn: "60s" },
     }),
-    UserModule,
     AuthModule,
+    AdministratorModule,
+    EnterpriseModule,
+    UserModule,
   ],
 })
 export class AppModule {}
