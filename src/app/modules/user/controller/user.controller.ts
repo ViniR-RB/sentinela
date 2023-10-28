@@ -11,20 +11,19 @@ import {
   Put,
   UseGuards,
 } from "@nestjs/common";
-import AuthGuard from "src/app/core/guard/auth.guard";
-import UserAlreadyExists from "../domain/exception/user_already_exists.exception";
 import IUserCreateUseCase from "../domain/usecases/i_user_create_use_case";
-import IUserUpdateUseCase from "../domain/usecases/i_user_update_use_case";
+import IUserDeleteUseCase from "../domain/usecases/i_user_delete_use_case";
 import UserEntity from "../domain/user.entity";
-import { USER_CREATE_USE_CASE, USER_UPDATE_USE_CASE } from "../symbols";
+import { USER_CREATE_USE_CASE, USER_DELETE_USE_CASE } from "../symbols";
+import AuthAdministratorGuard from "src/app/core/guard/auth_administrator.guard";
 
 @Controller("/api/user")
 export default class UserController {
   constructor(
     @Inject(USER_CREATE_USE_CASE)
     private readonly userCreateUseCase: IUserCreateUseCase,
-    @Inject(USER_UPDATE_USE_CASE)
-    private readonly userUpdatedUseCase: IUserUpdateUseCase,
+    @Inject(USER_DELETE_USE_CASE)
+    private readonly userDeleteUseCase: IUserDeleteUseCase,
   ) {}
 
   @Post()
@@ -34,30 +33,19 @@ export default class UserController {
       await this.userCreateUseCase.create(userCreate);
       return;
     } catch (error) {
-      if (error instanceof UserAlreadyExists) {
-        throw new HttpException(error.message, HttpStatus.CONFLICT, {
-          cause: error.stack,
-        });
-      }
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR, {
         cause: error.stack,
       });
     }
   }
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthAdministratorGuard)
   @Put(":id")
-  public async updated(
+  public async delete(
     @Param("id", new ParseUUIDPipe()) id: string,
-    @Body() userAltered: UserEntity,
-  ): Promise<UserEntity> {
+  ): Promise<void> {
     try {
-      return await this.userUpdatedUseCase.update(id, userAltered);
+      return await this.userDeleteUseCase.delete(id);
     } catch (error) {
-      if (error instanceof UserAlreadyExists) {
-        throw new HttpException(error.message, HttpStatus.CONFLICT, {
-          cause: error.stack,
-        });
-      }
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR, {
         cause: error.stack,
       });

@@ -2,7 +2,6 @@ import UserEntity from "../domain/user.entity";
 
 export default interface IUserAdapterGateway {
   create(userCreate: UserEntity): Promise<void>;
-  update(id: string, userAltered: UserEntity): Promise<UserEntity>;
+  delete(id: string): Promise<void>;
   findOneById(id: string): Promise<UserEntity>;
-  findOneByEmail(email: string): Promise<UserEntity>;
 }

@@ -4,9 +4,9 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { jwtConstants } from "./app/core/constants/jwt_constants";
 import AdministratorModule from "./app/modules/administrator/administrator.module";
 import AuthModule from "./app/modules/auth/auth.module";
+import ComplaintModule from "./app/modules/complaint/complaint.module";
 import { ConfigurationModule } from "./app/modules/configuration/configuration.module";
 import { ConfigurationService } from "./app/modules/configuration/configuration.service";
-import EnterpriseModule from "./app/modules/enterprise/enterprise.module";
 import UserModule from "./app/modules/user/user.module";
 
 @Module({
@@ -33,8 +33,8 @@ import UserModule from "./app/modules/user/user.module";
     }),
     AuthModule,
     AdministratorModule,
-    EnterpriseModule,
     UserModule,
+    ComplaintModule,
   ],
 })
 export class AppModule {}

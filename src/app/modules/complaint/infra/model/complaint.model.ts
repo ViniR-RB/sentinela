@@ -1,4 +1,5 @@
 import {
+  Column,
   CreateDateColumn,
   Entity,
   PrimaryColumn,
@@ -6,15 +7,26 @@ import {
 } from "typeorm";
 
 @Entity({
-  name: "users",
+  name: "complaint",
 })
-export default class UserModel {
+export default class ComplaintModel {
   @PrimaryColumn({
     type: "uuid",
     generated: "uuid",
     unique: true,
   })
   id: string;
+  @Column()
+  description: string;
+  @Column()
+  longitude: string;
+  @Column()
+  latitude: string;
+  @Column()
+  status: string;
+  @Column()
+  image: string;
+
   @CreateDateColumn({
     name: "created_at",
   })

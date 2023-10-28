@@ -1,9 +1,9 @@
-export default class UserNotAlreadyExists extends Error {
+export default class ComplaintRepositoryException extends Error {
   constructor(
     readonly message: string,
     readonly stack?: string,
   ) {
-    super("UserNotAlreadyExists");
+    super("ComplaintRepositoryException");
     this.message = message;
     this.stack = stack;
   }

@@ -26,8 +26,8 @@ export default class AuthController {
   @Post("/login")
   async login(@Body() bodyRequest: LoginDto) {
     try {
-      const { email, password, perfilType } = bodyRequest;
-      return await this.loginUsecase.login(email, password, perfilType);
+      const { email, password } = bodyRequest;
+      return await this.loginUsecase.login(email, password);
     } catch (error) {
       if (error instanceof AuthRepositoryException) {
         throw new HttpException(error.message, HttpStatus.NOT_FOUND, {
