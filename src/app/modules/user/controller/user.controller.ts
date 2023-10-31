@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   HttpCode,
   HttpException,
@@ -11,11 +10,10 @@ import {
   Put,
   UseGuards,
 } from "@nestjs/common";
+import AuthAdministratorGuard from "src/app/core/guard/auth_administrator.guard";
 import IUserCreateUseCase from "../domain/usecases/i_user_create_use_case";
 import IUserDeleteUseCase from "../domain/usecases/i_user_delete_use_case";
-import UserEntity from "../domain/user.entity";
 import { USER_CREATE_USE_CASE, USER_DELETE_USE_CASE } from "../symbols";
-import AuthAdministratorGuard from "src/app/core/guard/auth_administrator.guard";
 
 @Controller("/api/user")
 export default class UserController {
@@ -28,10 +26,9 @@ export default class UserController {
 
   @Post()
   @HttpCode(201)
-  public async create(@Body() userCreate: UserEntity) {
+  public async create() {
     try {
-      await this.userCreateUseCase.create(userCreate);
-      return;
+      return await this.userCreateUseCase.create();
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR, {
         cause: error.stack,

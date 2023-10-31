@@ -4,8 +4,8 @@ import { EncryptionService } from "src/app/core/services/encryption.service";
 import { EntityNotFoundError, Repository } from "typeorm";
 import IUserAdapterGateway from "../../adapters/i_user_gateway";
 import UserRepositoryException from "../../domain/exception/user_repository.exception";
-import UserEntity from "../../domain/user.entity";
 import UserModel from "../model/user.model";
+import UserEntity from "../../domain/user.entity";
 
 @Injectable()
 export default class UserRepository implements IUserAdapterGateway {
@@ -41,10 +41,9 @@ export default class UserRepository implements IUserAdapterGateway {
       }
     }
   }
-  public async create(userCreate: UserEntity): Promise<void> {
+  public async create(): Promise<UserEntity> {
     try {
-      await this.userRepository.save(this.userRepository.create(userCreate));
-      return;
+      return await this.userRepository.save(this.userRepository.create());
     } catch (error) {
       throw new UserRepositoryException(error.message, error.stack);
     }

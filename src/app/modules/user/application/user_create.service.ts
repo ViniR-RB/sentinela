@@ -10,7 +10,7 @@ export default class UserCreateService implements IUserCreateUseCase {
     @Inject(USER_ADAPTER_GATEWAY)
     private readonly userAdapterGateway: IUserAdapterGateway,
   ) {}
-  public async create(userCreate: UserEntity): Promise<void> {
-    await this.userAdapterGateway.create(userCreate);
+  public async create(): Promise<UserEntity> {
+    return await this.userAdapterGateway.create();
   }
 }
