@@ -29,4 +29,10 @@ export class ConfigurationService {
   getSalt(): number {
     return Number(this.env.SALT);
   }
+  getSupabaseUrl(): string {
+    return this.env.SUPABASE_URL;
+  }
+  getSupabaseApiKey(): string {
+    return this.env.SUPABASE_API_KEY;
+  }
 }

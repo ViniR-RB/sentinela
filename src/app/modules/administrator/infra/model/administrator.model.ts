@@ -1,5 +1,5 @@
+import { AdministratorType } from "src/app/core/utils/administrator.type";
 import BaseModel from "src/app/core/utils/base.model";
-import { AdministratorType } from "src/app/core/utils/perfil.type";
 import { Column, Entity } from "typeorm";
 @Entity({
   name: "administrator",

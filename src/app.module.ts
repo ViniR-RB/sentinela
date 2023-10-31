@@ -7,6 +7,7 @@ import AuthModule from "./app/modules/auth/auth.module";
 import ComplaintModule from "./app/modules/complaint/complaint.module";
 import { ConfigurationModule } from "./app/modules/configuration/configuration.module";
 import { ConfigurationService } from "./app/modules/configuration/configuration.service";
+import { UploadModule } from "./app/modules/upload/upload.module";
 import UserModule from "./app/modules/user/user.module";
 
 @Module({
@@ -35,6 +36,7 @@ import UserModule from "./app/modules/user/user.module";
     AdministratorModule,
     UserModule,
     ComplaintModule,
+    UploadModule,
   ],
 })
 export class AppModule {}
