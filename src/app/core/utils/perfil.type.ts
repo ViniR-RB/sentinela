@@ -1,5 +1,4 @@
-export enum PerfilType {
-  User = "User",
-  Administrator = "Administrator",
-  Enterprise = "Enterprise",
+export enum AdministratorType {
+  Ibama = "Ibama",
+  Secretaria = "Secretaria",
 }
