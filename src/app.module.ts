@@ -32,6 +32,7 @@ import UserModule from "./app/modules/user/user.module";
       secret: jwtConstants.secret,
       signOptions: { expiresIn: "60s" },
     }),
+
     AuthModule,
     AdministratorModule,
     UserModule,

@@ -11,6 +11,26 @@ export default class ComplaintRepository implements IComplaintGateway {
     @InjectRepository(ComplaintModel)
     private readonly complaintRepository: Repository<ComplaintModel>,
   ) {}
+  async getAllComplaint(): Promise<ComplaintEntity[]> {
+    try {
+      const complaintList = await this.complaintRepository.find();
+      const complaintEntityList = complaintList.map(
+        (complaintModel) =>
+          new ComplaintEntity(
+            complaintModel.id,
+            complaintModel.description,
+            complaintModel.longitude,
+            complaintModel.latitude,
+            complaintModel.createdAt,
+            complaintModel.updatedAt,
+            complaintModel.image,
+          ),
+      );
+      return complaintEntityList;
+    } catch (e) {
+      throw new ComplaintRepositoryException(e.message, e.stack);
+    }
+  }
   public async create(
     complaintEntity: ComplaintEntity,
   ): Promise<ComplaintEntity> {
