@@ -18,6 +18,7 @@ export default class ComplaintRepository implements IComplaintGateway {
         (complaintModel) =>
           new ComplaintEntity(
             complaintModel.id,
+            complaintModel.title,
             complaintModel.description,
             complaintModel.longitude,
             complaintModel.latitude,

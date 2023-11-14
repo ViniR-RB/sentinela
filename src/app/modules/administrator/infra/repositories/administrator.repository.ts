@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { EncryptionService } from "src/app/core/services/encryption.service";
-import { EntityNotFoundError, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import IAdministratorAdapterGateway from "../../adapters/i_administrator_gateway";
 import AdministratorEntity from "../../domain/administrator.entity";
 import AdministratorAlreadyExistsException from "../../domain/exception/administrator_already_exists.exception";
@@ -18,38 +18,26 @@ export default class AdministratorRepository
   ) {}
   public async findOneByEmail(email: string): Promise<AdministratorEntity> {
     try {
-      return await this.administratorRepository.findOneByOrFail({
+      return await this.administratorRepository.findOneBy({
         email: email,
       });
     } catch (error) {
-      if (error instanceof EntityNotFoundError) {
-        throw new AdministratorRepositoryException(
-          "Administrator não existe",
-          error.stack,
-        );
-      }
       throw new AdministratorRepositoryException(error.message, error.stack);
     }
   }
-  public async findOneById(id: string): Promise<AdministratorEntity> {
+  public async findOneById(id: string): Promise<AdministratorEntity | null> {
     try {
-      return await this.administratorRepository.findOneByOrFail({ id: id });
+      return await this.administratorRepository.findOneBy({ id: id });
     } catch (error) {
-      if (error instanceof EntityNotFoundError) {
-        throw new AdministratorRepositoryException(
-          "Administrator não existe",
-          error.stack,
-        );
-      }
       throw new AdministratorRepositoryException(error.message, error.stack);
     }
   }
 
   public async create(administrator: AdministratorEntity): Promise<void> {
-    const { id, password } = administrator;
+    const { email, password } = administrator;
     try {
       const administratorFinder = await this.administratorRepository.findOneBy({
-        id: id,
+        email: email,
       });
       if (administratorFinder !== null) {
         throw new AdministratorAlreadyExistsException(

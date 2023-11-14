@@ -13,6 +13,7 @@ export default class CreateComplaintService implements ICreateComplaintUseCase {
   public async create(
     complaintEntity: ComplaintEntity,
   ): Promise<ComplaintEntity> {
+    console.log(complaintEntity);
     return await this.complaintGateway.create(complaintEntity);
   }
 }

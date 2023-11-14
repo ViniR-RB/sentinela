@@ -1,6 +1,7 @@
 export default class ComplaintEntity {
   constructor(
     public id: string,
+    public title: string,
     public description: string,
     public longitude: string,
     public latitude: string,
@@ -9,6 +10,7 @@ export default class ComplaintEntity {
     public image: string,
   ) {
     this.id = id;
+    this.title = title;
     this.description = description;
     this.longitude = longitude;
     this.latitude = latitude;

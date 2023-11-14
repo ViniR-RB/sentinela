@@ -17,6 +17,8 @@ export default class ComplaintModel {
   })
   id: string;
   @Column()
+  title: string;
+  @Column()
   description: string;
   @Column()
   longitude: string;

@@ -1,6 +1,7 @@
 import BaseModel from "src/app/core/utils/base.model";
 import { Entity } from "typeorm";
+
 @Entity({
-  name: "administrator",
+  name: "organ",
 })
-export default class AdministratorModel extends BaseModel {}
+export default class OrganModel extends BaseModel {}
