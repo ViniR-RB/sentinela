@@ -18,16 +18,27 @@ export default class AdministratorRepository
   ) {}
   public async findOneByEmail(email: string): Promise<AdministratorEntity> {
     try {
-      return await this.administratorRepository.findOneBy({
+      console.log(email);
+      const administratorFinder = await this.administratorRepository.findOneBy({
         email: email,
       });
+      if (administratorFinder == null) {
+        return null;
+      }
+      return administratorFinder.fromModelToEntity;
     } catch (error) {
       throw new AdministratorRepositoryException(error.message, error.stack);
     }
   }
   public async findOneById(id: string): Promise<AdministratorEntity | null> {
     try {
-      return await this.administratorRepository.findOneBy({ id: id });
+      const administratorFinder = await this.administratorRepository.findOneBy({
+        id: id,
+      });
+      if (administratorFinder === null) {
+        return null;
+      }
+      return administratorFinder.fromModelToEntity;
     } catch (error) {
       throw new AdministratorRepositoryException(error.message, error.stack);
     }

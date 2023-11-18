@@ -31,7 +31,7 @@ import UserModule from "./app/modules/user/user.module";
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: "60s" },
+      signOptions: { expiresIn: "30m" },
     }),
 
     AuthModule,

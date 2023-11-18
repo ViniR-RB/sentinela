@@ -2,7 +2,6 @@ import { Inject, Injectable } from "@nestjs/common";
 import { EncryptionService } from "src/app/core/services/encryption.service";
 import GenerateTokensService from "src/app/core/services/generate_tokens.service";
 import IAdministratorAdapterGateway from "src/app/modules/administrator/adapters/i_administrator_gateway";
-import AdministratorEntity from "src/app/modules/administrator/domain/administrator.entity";
 import { ADMINISTRATOR_ADAPTER_GATEWAY } from "src/app/modules/administrator/symbols";
 import IOrganAdapterGateway from "src/app/modules/organs/adapters/i_organs_gateway";
 import OrganEntity from "src/app/modules/organs/domain/organ.entity";
@@ -23,40 +22,44 @@ export default class AuthRepository implements IAuthGateway {
     private readonly generateTokensService: GenerateTokensService,
   ) {}
   async refresh(id: string): Promise<TokensEntity> {
-    let authenticaded: AdministratorEntity | OrganEntity;
     try {
-      authenticaded = await this.administratorGateway.findOneById(id);
-      if (authenticaded == null) {
-        authenticaded = await this.organGateway.findOneById(id);
-
-        if (authenticaded == null) {
-          throw new AuthRepositoryException(
-            "Administrator ou Orgão não encontrado",
-          );
-        }
+      const administratorFinder =
+        await this.administratorGateway.findOneById(id);
+      if (administratorFinder !== null) {
+        return await this.generateTokensService.generate(administratorFinder);
+      } else {
+        const organFinder = await this.organGateway.findOneById(id);
+        return await this.generateTokensService.generate(organFinder);
       }
-      return await this.generateTokensService.generate(authenticaded);
     } catch (error) {
       throw new AuthRepositoryException(error.message, error.stack);
     }
   }
   public async login(email: string, password: string): Promise<TokensEntity> {
     try {
-      const finderAdministrator: AdministratorEntity =
+      const finderAdministrator =
         await this.administratorGateway.findOneByEmail(email);
+
       if (finderAdministrator == null) {
         const finderOrgan = await this.organGateway.findOneByEmail(email);
+        const organ = new OrganEntity(
+          finderOrgan.id,
+          finderOrgan.name,
+          finderOrgan.email,
+          finderOrgan.password,
+          [],
+        );
         if (finderOrgan == null) {
           throw new EmailOrPasswordException("E-mail ou senha incorreto");
         }
         const isMatchPassword = await this.encryptionService.isMatch(
-          finderOrgan.password,
+          organ.password,
           password,
         );
         if (isMatchPassword === false) {
           throw new EmailOrPasswordException("E-mail ou senha incorreto");
         }
-        return await this.generateTokensService.generate(finderOrgan);
+        return await this.generateTokensService.generate(organ);
       }
       const isMatchPassword = await this.encryptionService.isMatch(
         finderAdministrator.password,

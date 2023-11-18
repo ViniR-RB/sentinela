@@ -38,7 +38,6 @@ export default class UserRepository implements IUserAdapterGateway {
           complaints: true,
         },
       });
-      console.log(userFinder);
       return new UserEntity(
         userFinder.id,
         userFinder.complaints.map((e) => ComplaintModel.fromModelToEntity(e)),
@@ -51,7 +50,6 @@ export default class UserRepository implements IUserAdapterGateway {
     try {
       const userModel = this.userRepository.create();
       await this.userRepository.save(userModel);
-      console.log(userModel);
       return new UserEntity(userModel.id, []);
     } catch (error) {
       throw new UserRepositoryException(error.message, error.stack);

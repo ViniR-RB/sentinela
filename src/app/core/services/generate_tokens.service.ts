@@ -10,25 +10,30 @@ export default class GenerateTokensService {
   public async generate(
     inputTypeEntity: AdministratorEntity | OrganEntity,
   ): Promise<TokensEntity> {
-    let payload;
     if (inputTypeEntity instanceof AdministratorEntity) {
-      payload = {
+      const payload = {
         sub: inputTypeEntity.id,
         name: inputTypeEntity.name,
         perfilType: "Administrator",
       };
-    } else {
-      payload = {
+      const access = await this.jwtService.signAsync(payload, {
+        expiresIn: "30m",
+      });
+      const refreshtoken = await this.jwtService.signAsync(payload);
+      return new TokensEntity(access, refreshtoken);
+    }
+
+    if (inputTypeEntity instanceof OrganEntity) {
+      const payload = {
         sub: inputTypeEntity.id,
         name: inputTypeEntity.name,
         perfilType: "Organ",
       };
+      const access = await this.jwtService.signAsync(payload, {
+        expiresIn: "30m",
+      });
+      const refreshtoken = await this.jwtService.signAsync(payload);
+      return new TokensEntity(access, refreshtoken);
     }
-
-    const access = await this.jwtService.signAsync(payload, {
-      expiresIn: "30m",
-    });
-    const refreshtoken = await this.jwtService.signAsync(payload);
-    return new TokensEntity(access, refreshtoken);
   }
 }

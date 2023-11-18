@@ -25,6 +25,7 @@ export default class OrganRepository implements IOrganAdapterGateway {
   }
   async findOneByEmail(email: string): Promise<OrganEntity> {
     try {
+      console.log(email);
       const organFinder = await this.organRepository.findOne({
         where: {
           email: email,
@@ -34,7 +35,7 @@ export default class OrganRepository implements IOrganAdapterGateway {
         },
       });
       if (organFinder == null) {
-        throw new OrganRepositoryException("Orgão com esse usuário não existe");
+        return null;
       }
       if (
         organFinder.complaints === undefined ||
@@ -66,13 +67,16 @@ export default class OrganRepository implements IOrganAdapterGateway {
   }
   async findOneById(id: string): Promise<OrganEntity> {
     try {
-      const organFinder = await this.organRepository.findOneBy({ id });
+      const organFinder = await this.organRepository.findOneBy({ id: id });
+      if (organFinder == null) {
+        return null;
+      }
       return new OrganEntity(
         organFinder.id,
         organFinder.name,
         organFinder.email,
         organFinder.password,
-        organFinder.complaints.map(ComplaintModel.fromModelToEntity),
+        [],
       );
     } catch (error) {
       throw new OrganRepositoryException(error.message, error.stack);

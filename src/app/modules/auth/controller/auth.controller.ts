@@ -38,11 +38,11 @@ export default class AuthController {
   }
   @UseGuards(AuthRefreshGuard)
   @Get("/refresh")
-  async refreshTokens(@Request() req, @Body() body) {
+  async refreshTokens(@Request() req) {
     try {
+      console.log(req.user.sub);
       const id = req.user.sub;
-      const { perfilType } = body;
-      return await this.refreshUseCase.refresh(id, perfilType);
+      return await this.refreshUseCase.refresh(id);
     } catch (error) {
       if (error instanceof AuthRepositoryException) {
         throw new HttpException(error.message, HttpStatus.NOT_FOUND, {
