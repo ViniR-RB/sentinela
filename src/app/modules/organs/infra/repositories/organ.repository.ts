@@ -2,7 +2,6 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { EncryptionService } from "src/app/core/services/encryption.service";
 import ComplaintEntity from "src/app/modules/complaint/domain/complaint.entity";
-import ComplaintModel from "src/app/modules/complaint/infra/model/complaint.model";
 import { Repository } from "typeorm";
 import IOrganAdapterGateway from "../../adapters/i_organs_gateway";
 import OrganAlreadyExistsException from "../../domain/exception/organ_already_exists.exception";
@@ -25,7 +24,6 @@ export default class OrganRepository implements IOrganAdapterGateway {
   }
   async findOneByEmail(email: string): Promise<OrganEntity> {
     try {
-      console.log(email);
       const organFinder = await this.organRepository.findOne({
         where: {
           email: email,
@@ -50,9 +48,7 @@ export default class OrganRepository implements IOrganAdapterGateway {
         );
       }
       const complaintEntity: ComplaintEntity[] = organFinder.complaints.map(
-        (e) => {
-          return ComplaintModel.fromModelToEntity(e);
-        },
+        (e) => e.fromModelToEntity,
       );
       return new OrganEntity(
         organFinder.id,

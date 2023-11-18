@@ -18,7 +18,6 @@ export default class AdministratorRepository
   ) {}
   public async findOneByEmail(email: string): Promise<AdministratorEntity> {
     try {
-      console.log(email);
       const administratorFinder = await this.administratorRepository.findOneBy({
         email: email,
       });

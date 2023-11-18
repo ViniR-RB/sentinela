@@ -50,18 +50,18 @@ export default class ComplaintModel {
   @ManyToOne(() => OrganModel, (organ) => organ.complaints, { nullable: false })
   organId: string;
 
-  static fromModelToEntity(complaintModel: ComplaintModel): ComplaintEntity {
+  get fromModelToEntity(): ComplaintEntity {
     return new ComplaintEntity(
-      complaintModel.id,
-      complaintModel.title,
-      complaintModel.description,
-      complaintModel.longitude,
-      complaintModel.latitude,
-      complaintModel.status,
-      complaintModel.createdAt,
-      complaintModel.updatedAt,
-      complaintModel.userId,
-      complaintModel.organId,
+      this.id,
+      this.title,
+      this.description,
+      this.longitude,
+      this.latitude,
+      this.createdAt,
+      this.status,
+      this.image,
+      this.userId,
+      this.organId,
     );
   }
 }

@@ -40,7 +40,6 @@ export default class AuthController {
   @Get("/refresh")
   async refreshTokens(@Request() req) {
     try {
-      console.log(req.user.sub);
       const id = req.user.sub;
       return await this.refreshUseCase.refresh(id);
     } catch (error) {
