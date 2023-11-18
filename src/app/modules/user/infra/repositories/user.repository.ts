@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import ComplaintModel from "src/app/modules/complaint/infra/model/complaint.model";
 import { Repository } from "typeorm";
 import IUserAdapterGateway from "../../adapters/i_user_gateway";
 import UserRepositoryException from "../../domain/exception/user_repository.exception";
@@ -40,7 +39,7 @@ export default class UserRepository implements IUserAdapterGateway {
       });
       return new UserEntity(
         userFinder.id,
-        userFinder.complaints.map((e) => ComplaintModel.fromModelToEntity(e)),
+        userFinder.complaints.map((e) => e.fromModelToEntity),
       );
     } catch (error) {
       throw new UserRepositoryException("Usuário não encontrado");

@@ -14,9 +14,7 @@ export default class ComplaintRepository implements IComplaintGateway {
   async getAllComplaint(): Promise<ComplaintEntity[]> {
     try {
       const complaintList = await this.complaintRepository.find();
-      const complaintEntityList = complaintList.map(
-        ComplaintModel.fromModelToEntity,
-      );
+      const complaintEntityList = complaintList.map((e) => e.fromModelToEntity);
       return complaintEntityList;
     } catch (e) {
       throw new ComplaintRepositoryException(e.message, e.stack);
