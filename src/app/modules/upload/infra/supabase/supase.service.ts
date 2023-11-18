@@ -27,8 +27,6 @@ export default class SupaBaseService implements IUploadGateway {
           upsert: true,
         });
       return;
-    } catch (e) {
-      console.log(e);
-    }
+    } catch (e) {}
   }
 }

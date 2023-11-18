@@ -28,6 +28,7 @@ export default class AuthRepository implements IAuthGateway {
       authenticaded = await this.administratorGateway.findOneById(id);
       if (authenticaded == null) {
         authenticaded = await this.organGateway.findOneById(id);
+
         if (authenticaded == null) {
           throw new AuthRepositoryException(
             "Administrator ou Orgão não encontrado",
@@ -49,13 +50,13 @@ export default class AuthRepository implements IAuthGateway {
           throw new EmailOrPasswordException("E-mail ou senha incorreto");
         }
         const isMatchPassword = await this.encryptionService.isMatch(
-          finderAdministrator.password,
+          finderOrgan.password,
           password,
         );
         if (isMatchPassword === false) {
           throw new EmailOrPasswordException("E-mail ou senha incorreto");
         }
-        return await this.generateTokensService.generate(finderAdministrator);
+        return await this.generateTokensService.generate(finderOrgan);
       }
       const isMatchPassword = await this.encryptionService.isMatch(
         finderAdministrator.password,

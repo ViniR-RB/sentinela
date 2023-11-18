@@ -1,24 +1,22 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { EncryptionService } from "src/app/core/services/encryption.service";
-import { EntityNotFoundError, Repository } from "typeorm";
+import ComplaintModel from "src/app/modules/complaint/infra/model/complaint.model";
+import { Repository } from "typeorm";
 import IUserAdapterGateway from "../../adapters/i_user_gateway";
 import UserRepositoryException from "../../domain/exception/user_repository.exception";
-import UserModel from "../model/user.model";
 import UserEntity from "../../domain/user.entity";
+import UserModel from "../model/user.model";
 
 @Injectable()
 export default class UserRepository implements IUserAdapterGateway {
   constructor(
     @InjectRepository(UserModel)
     private readonly userRepository: Repository<UserModel>,
-    private readonly encryptionService: EncryptionService,
   ) {}
   public async delete(id: string): Promise<void> {
     try {
-      const user = await this.findOneById(id);
-
-      await this.userRepository.delete(user);
+      await this.findOneById(id);
+      await this.userRepository.delete({ id: id });
       return;
     } catch (error) {
       if (error instanceof UserRepositoryException) {
@@ -30,20 +28,31 @@ export default class UserRepository implements IUserAdapterGateway {
       );
     }
   }
-  public async findOneById(id: string) {
+  public async findOneById(id: string): Promise<UserEntity> {
     try {
-      return await this.userRepository.findOneByOrFail({
-        id: id,
+      const userFinder = await this.userRepository.findOne({
+        where: {
+          id: id,
+        },
+        relations: {
+          complaints: true,
+        },
       });
+      console.log(userFinder);
+      return new UserEntity(
+        userFinder.id,
+        userFinder.complaints.map((e) => ComplaintModel.fromModelToEntity(e)),
+      );
     } catch (error) {
-      if (error instanceof EntityNotFoundError) {
-        throw new UserRepositoryException("Usuário não encontrado");
-      }
+      throw new UserRepositoryException("Usuário não encontrado");
     }
   }
   public async create(): Promise<UserEntity> {
     try {
-      return await this.userRepository.save(this.userRepository.create());
+      const userModel = this.userRepository.create();
+      await this.userRepository.save(userModel);
+      console.log(userModel);
+      return new UserEntity(userModel.id, []);
     } catch (error) {
       throw new UserRepositoryException(error.message, error.stack);
     }
