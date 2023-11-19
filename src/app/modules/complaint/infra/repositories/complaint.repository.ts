@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { EntityNotFoundError, Repository } from "typeorm";
 import IComplaintGateway from "../../adapters/i_complaint_gateway";
 import ComplaintEntity from "../../domain/complaint.entity";
 import ComplaintRepositoryException from "../../domain/exception/complaint_repository.exception";
@@ -11,6 +11,27 @@ export default class ComplaintRepository implements IComplaintGateway {
     @InjectRepository(ComplaintModel)
     private readonly complaintRepository: Repository<ComplaintModel>,
   ) {}
+  async updateComplaintStatus(id: string, status: string): Promise<void> {
+    try {
+      const complaintFinder = await this.complaintRepository.findOneByOrFail({
+        id: id,
+      });
+      const complaintModifiy = {
+        ...complaintFinder,
+        status: status,
+      };
+      await this.complaintRepository.save(
+        this.complaintRepository.create(complaintModifiy),
+      );
+    } catch (e) {
+      if (e instanceof EntityNotFoundError) {
+        throw new ComplaintRepositoryException("Essa denúncia não existe");
+      }
+      throw new ComplaintRepositoryException(
+        "Hove um erro inesperado em alterar as denúncias",
+      );
+    }
+  }
   async getAllComplaint(): Promise<ComplaintEntity[]> {
     try {
       const complaintList = await this.complaintRepository.find();
