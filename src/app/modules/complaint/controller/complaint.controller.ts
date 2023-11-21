@@ -57,7 +57,7 @@ export default class ComplaintController {
   ) {
     try {
       const uploadEntity = new FileEntity(
-        file.originalname,
+        file.filename == undefined ? file.filename : file.fieldname,
         file.buffer,
         "upload",
       );
