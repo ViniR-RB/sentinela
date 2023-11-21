@@ -57,10 +57,11 @@ export default class ComplaintController {
   ) {
     try {
       const uploadEntity = new FileEntity(
-        file.fieldname,
+        file.originalname,
         file.buffer,
         "upload",
       );
+      console.log(file);
       await this.uploadImageService.upload(uploadEntity);
       const getUrl = await this.uploadGetUrlImageService.getUrlImage(
         uploadEntity.fileName,
