@@ -61,7 +61,6 @@ export default class ComplaintController {
         file.buffer,
         "upload",
       );
-      console.log(file);
       await this.uploadImageService.upload(uploadEntity);
       const getUrl = await this.uploadGetUrlImageService.getUrlImage(
         uploadEntity.fileName,
